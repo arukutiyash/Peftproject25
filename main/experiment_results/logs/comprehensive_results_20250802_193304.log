@@ -1,0 +1,19 @@
+2025-08-02 19:33:05,983 - AttackExperiments - INFO - Attack experiment runner initialized
+2025-08-02 19:33:05,988 - DefenseExperiments - INFO - Defense experiment runner initialized
+2025-08-02 19:33:05,990 - ComprehensiveResults - INFO - Comprehensive results generator initialized
+2025-08-02 19:33:05,990 - ComprehensiveResults - INFO - ================================================================================
+2025-08-02 19:33:05,990 - ComprehensiveResults - INFO - STARTING COMPREHENSIVE PEFT PRIVACY EVALUATION
+2025-08-02 19:33:05,990 - ComprehensiveResults - INFO - ================================================================================
+2025-08-02 19:33:05,990 - ComprehensiveResults - INFO - 
+============================================================
+2025-08-02 19:33:05,990 - ComprehensiveResults - INFO - PHASE 1: ATTACK EXPERIMENTS
+2025-08-02 19:33:05,990 - ComprehensiveResults - INFO - ============================================================
+2025-08-02 19:33:05,991 - AttackExperiments - INFO - ============================================================
+2025-08-02 19:33:05,991 - AttackExperiments - INFO - STARTING COMPREHENSIVE ATTACK EXPERIMENTS
+2025-08-02 19:33:05,991 - AttackExperiments - INFO - ============================================================
+2025-08-02 19:33:05,991 - AttackExperiments - INFO - Creating adapter model...
+2025-08-02 19:33:06,063 - AttackExperiments - INFO - Creating prefix model...
+2025-08-02 19:33:06,064 - AttackExperiments - INFO - Creating bias model...
+2025-08-02 19:33:06,066 - AttackExperiments - INFO - Creating lora model...
+2025-08-02 19:33:06,067 - AttackExperiments - ERROR - Experiment failed: No models created successfully
+2025-08-02 19:33:06,067 - ComprehensiveResults - ERROR - Comprehensive evaluation failed: No models created successfully

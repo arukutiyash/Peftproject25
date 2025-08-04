@@ -1,0 +1,67 @@
+GRADIENT INVERSION ATTACKS ON PEFT METHODS
+COMPREHENSIVE EVALUATION REPORT
+============================================================
+
+Report Generated: 2025-08-02 02:27:21
+Experiment ID: EXP001
+Dataset: CIFAR-100
+Device: CPU
+Evaluation Samples: N/A
+
+EXECUTIVE SUMMARY
+--------------------
+
+• 4 PEFT methods evaluated
+• Average attack success rate: 64.0%
+• Average PSNR: 22.5 dB
+• Most vulnerable PEFT method: ADAPTER (85.0% success rate)
+• Average defense effectiveness: 85.0%
+• Best overall defense: dp
+
+ATTACK ANALYSIS
+---------------
+
+Attack Performance by PEFT Method:
+
+ADAPTER:
+  • Success Rate: 85.0%
+  • Mean PSNR: 28.20 dB
+  • Mean SSIM: 0.823
+  • Patches Recovered: 124
+
+Vulnerability Ranking (Most to Least Vulnerable):
+  1. ADAPTER: 85.0% success rate
+  2. LORA: 72.0% success rate
+  3. PREFIX: 58.0% success rate
+  4. BIAS: 41.0% success rate
+
+DEFENSE ANALYSIS
+----------------
+
+Defense Effectiveness Rankings:
+  1. Dp: 92.0% effectiveness
+  2. Instahide: 87.0% effectiveness
+  3. Mixup: 76.0% effectiveness
+
+Overall Defense Performance:
+  • Average Effectiveness: 85.0%
+  • Standard Deviation: 0.0%
+  • Most Vulnerable PEFT: N/A
+
+KEY FINDINGS
+------------
+
+• 1. ADAPTER is the most vulnerable PEFT method with 85.0% attack success rate
+• 2. BIAS is the least vulnerable PEFT method with 41.0% attack success rate
+• 3. Dp is the most effective defense with 92.0% average effectiveness
+• 5. All tested defenses provide meaningful privacy protection with varying degrees of utility impact
+
+RECOMMENDATIONS
+---------------
+
+
+General Recommendations:
+  • Implement multiple defense layers for enhanced protection
+  • Consider privacy-utility tradeoffs based on application requirements
+  • Regularly evaluate defense effectiveness against new attack methods
+  • Use adaptive defenses that adjust based on detected threats
