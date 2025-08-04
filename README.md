@@ -2,10 +2,6 @@
 
 Comprehensive codebase accompanying the research on **privacy leakage in PEFT models** (Adapters, Prefix-Tuning, Bias-Tuning, LoRA) inside a Federated-Learning (FL) pipeline.
 
-> Re-implements the gradient-inversion attack from  
-> *“Gradient Inversion Attacks on Parameter-Efficient Fine-Tuning”, CVPR 2025*  
-> and extends it with multiple PEFT methods, multi-round attacks, and defenses.
-
 ---
 
 ## 🌳 Directory Tree
