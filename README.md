@@ -32,7 +32,7 @@ Step 3: Verify Installation
 # Quick dependency check
 python -c "import torch, torchvision, matplotlib, numpy, sklearn; print('✅ All dependencies installed!')"
 
-# Check CUDA availability (optional, CPU works too)
+# Check CUDA availability use T4GPU in Colab or any other gpu for faster evaluation
 python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
 
 step 4: RUN the main file 
