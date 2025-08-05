@@ -12,8 +12,8 @@ from PIL import Image
 class BaseGradientInversionAttack(ABC):
     """Base class for gradient inversion attacks on PEFT methods"""
 
-    def __init__(self, model: nn.Module, device: str = 'cuda',
-                 patch_size: int = 4, img_size: int = 32, num_patches: int = 64):
+    def __init__(self, model: nn.Module, device: str = 'cuda', recovery_method:
+                 str = "direct", patch_size: int = 4, img_size: int = 32, num_patches: int = 64, **kwargs):
         """
         Initialize base attack
 
