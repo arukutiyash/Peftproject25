@@ -3,6 +3,7 @@ import os
 import sys
 from datetime import datetime
 import logging
+import numpy as np
 from typing import Dict, Any
 
 # Add project root to path
