@@ -2,9 +2,9 @@ import torch
 import os
 import sys
 import numpy as np
-from datetime import datetime #run_attack_experiments.py
+from datetime import datetime
 import logging
-from typing import Dict, Any
+from typing import Dict, Any, List  # ✅ Added List import
 
 # Add project root to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -14,7 +14,6 @@ from models.model_factory import ModelFactory
 from utils.data_processing import DataProcessor
 from evaluation.attack_evaluator import AttackEvaluator
 from utils.visualization import ResultVisualizer
-
 
 class AttackExperimentRunner:
     """Run comprehensive attack experiments across all PEFT methods"""
@@ -88,11 +87,13 @@ class AttackExperimentRunner:
             self.logger.info(f"Creating {peft_method} model...")
 
             try:
+                # ✅ FIXED: Correct ModelFactory parameters
                 model = self.model_factory.create_model(
+                    model_size="base",
                     peft_method=peft_method,
-                    model_config=self.config.model_config,
+                    num_classes=100,
                     peft_config=self.config.peft_configs[peft_method],
-                    device=self.config.device
+                    malicious=True
                 )
 
                 models[peft_method] = model
@@ -167,7 +168,7 @@ class AttackExperimentRunner:
             'num_runs': num_runs
         }
 
-    def _aggregate_multiple_runs(self, all_runs: list[Dict[str, Any]]) -> Dict[str, Any]:
+    def _aggregate_multiple_runs(self, all_runs: List[Dict[str, Any]]) -> Dict[str, Any]:  # ✅ FIXED: List type hint
         """Aggregate results across multiple runs"""
 
         if not all_runs:
