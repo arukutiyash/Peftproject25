@@ -1,8 +1,10 @@
 import torch
-import torch.nn as nn #adapter_attack.py
+import torch.nn as nn
+import torch.nn.functional as F
 import numpy as np
 from typing import Dict, List, Optional, Tuple
 from attacks.attack_base import BaseGradientInversionAttack
+
 
 class AdapterGradientInversionAttack(BaseGradientInversionAttack):
     """Gradient inversion attack specifically for Adapter-based PEFT"""
@@ -210,38 +212,68 @@ class AdapterGradientInversionAttack(BaseGradientInversionAttack):
                     module.down_proj.weight.data = original_weight
 
         return sensitivity_analysis
-    # Add this method to the end of AdapterGradientInversionAttack class:
- def evaluate_attack_success(self, original_patches: List[torch.Tensor],
-                            reconstructed_patches: List[torch.Tensor]) -> Dict[str, float]:
-    """Evaluate attack success metrics"""
-    if not original_patches or not reconstructed_patches:
-        return {'psnr': 0.0, 'ssim': 0.0, 'mse': float('inf'), 'success_rate': 0.0}
 
-    psnr_values = []
-    ssim_values = []
-    mse_values = []
+    def evaluate_attack_success(self, original_patches: List[torch.Tensor],
+                               reconstructed_patches: List[torch.Tensor]) -> Dict[str, float]:
+        """Evaluate attack success metrics"""
+        if not original_patches or not reconstructed_patches:
+            return {'psnr': 0.0, 'ssim': 0.0, 'mse': float('inf'), 'success_rate': 0.0}
 
-    min_len = min(len(original_patches), len(reconstructed_patches))
+        psnr_values = []
+        ssim_values = []
+        mse_values = []
 
-    for i in range(min_len):
-        orig = original_patches[i]
-        recon = reconstructed_patches[i]
+        min_len = min(len(original_patches), len(reconstructed_patches))
 
-        if orig.shape != recon.shape:
-            continue
+        for i in range(min_len):
+            orig = original_patches[i]
+            recon = reconstructed_patches[i]
 
-        psnr = self.compute_psnr(orig, recon)
-        ssim = self.compute_ssim(orig, recon)
-        mse = torch.mean((orig - recon) ** 2).item()
+            if orig.shape != recon.shape:
+                continue
 
-        psnr_values.append(psnr)
-        ssim_values.append(ssim)
-        mse_values.append(mse)
+            psnr = self.compute_psnr(orig, recon)
+            ssim = self.compute_ssim(orig, recon)
+            mse = torch.mean((orig - recon) ** 2).item()
 
-    return {
-        'psnr': np.mean(psnr_values) if psnr_values else 0.0,
-        'ssim': np.mean(ssim_values) if ssim_values else 0.0,
-        'mse': np.mean(mse_values) if mse_values else float('inf'),
-        'success_rate': len([p for p in psnr_values if p > 20]) / len(psnr_values) if psnr_values else 0.0
-    }
+            psnr_values.append(psnr)
+            ssim_values.append(ssim)
+            mse_values.append(mse)
 
+        return {
+            'psnr': np.mean(psnr_values) if psnr_values else 0.0,
+            'ssim': np.mean(ssim_values) if ssim_values else 0.0,
+            'mse': np.mean(mse_values) if mse_values else float('inf'),
+            'success_rate': len([p for p in psnr_values if p > 20]) / len(psnr_values) if psnr_values else 0.0
+        }
+
+    def compute_psnr(self, original: torch.Tensor, reconstructed: torch.Tensor) -> float:
+        """Compute PSNR between original and reconstructed patches"""
+        mse = torch.mean((original - reconstructed) ** 2)
+        if mse == 0:
+            return float('inf')
+        psnr = 20 * torch.log10(1.0 / torch.sqrt(mse))
+        return psnr.item()
+
+    def compute_ssim(self, original: torch.Tensor, reconstructed: torch.Tensor) -> float:
+        """Compute SSIM between original and reconstructed patches"""
+        try:
+            from skimage.metrics import structural_similarity as ssim
+            
+            # Convert tensors to numpy
+            orig_np = original.detach().cpu().numpy()
+            recon_np = reconstructed.detach().cpu().numpy()
+            
+            # Ensure proper format (H, W, C) for SSIM
+            if orig_np.shape[0] == 3:  # CHW format
+                orig_np = np.transpose(orig_np, (1, 2, 0))
+                recon_np = np.transpose(recon_np, (1, 2, 0))
+            
+            return ssim(orig_np, recon_np, multichannel=True, data_range=1.0)
+            
+        except ImportError:
+            # Fallback to simple correlation coefficient
+            orig_flat = original.flatten()
+            recon_flat = reconstructed.flatten()
+            correlation = torch.corrcoef(torch.stack([orig_flat, recon_flat]))[0, 1]
+            return correlation.item() if not torch.isnan(correlation) else 0.0
